@@ -1,0 +1,9 @@
+clc
+close all
+clear all
+
+syms g mr ir d r th(t) phi(t)
+
+p = r*[th + phi; 0] + d*[sin(phi); cos(phi)];
+
+T = 1/2*mr*[diff(p(1),t), diff(p(2),t)]*[diff(p(1),t); diff(p(2),t)] + 1/2*ir*diff(phi,t)^2;

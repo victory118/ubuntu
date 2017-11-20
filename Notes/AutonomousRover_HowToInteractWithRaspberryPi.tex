@@ -1,0 +1,33 @@
+\documentclass{article}
+
+
+\title{Autonomous Rover: How to Interact with the Raspberry Pi}
+\author{Victor Yu}
+
+\begin{document}
+	\maketitle
+	
+	\section{Using SSH to connect to a Raspberry Pi from a Linux Computer}
+	You can use SSH to connect to your Raspberry Pi from a Linux computer, a Mac, or another Raspberry Pi, without installing additional software.
+	
+	You will need to know your Raspberry Pi's IP address to connect to it. To find this, type \texttt{hostname -I} from your Raspberry Pi terminal.
+	
+	To connect to your Pi from a different computer type \texttt{ssh pi@<IP>} where \texttt{<IP>} is replaced with your IP address.
+	
+	The IP address for my Raspberry Pi is \texttt{192.168.1.8} and the default password is \texttt{raspberry}.
+	
+	\section{Editing text files on a Raspberry Pi remotely from a Linux Computer}
+	
+	After connecting to the Raspberry Pi from your Linux computer, the command prompt on your Linux computer should look like \texttt{pi@raspberrypi:$\sim$ \$}. Now you can access the directories in the Raspberry Pi remotely.
+	
+	To test moving the rover, you need to edit a file called RobotControl.py. Go to the directory \texttt{/home/pi/catkin\_ws/robot\_control/src/} and open the function RobotControl.py in a text editor by typing \texttt{nano RobotControl.py}
+	where Nano is the name of a command-line editor. Find the function called	\texttt{self.ros\_interface.command\_velocity()} and type in 0.3 and 0.5 for the input arguments. It should look like \texttt{self.ros\_interface.command\_velocity\allowbreak(0.3,0.5)}. The first argument is the linear velocity in meters per second (0.3 m/s = 30 cm/s) and the second argument is the yaw rate in radians per second (0.5 rad/s). Save the file by typing \texttt{Ctrl+O} and close the editor by typing \texttt{Ctrl+X}.
+	
+	To run the program, you need to open two terminals connected to the Pi through ssh. In the first terminal, run the command \texttt{roslaunch robot\_launch robot.launch}. In the second terminal window, launch your RobotControl code with the following: \texttt{roslaunch robot\_control robot\_control.launch}. To stop the rover, type \texttt{Ctrl+C} to kill the program.
+	
+	\section{Motor calibration}
+	
+	Command the robot to travel at a speed of 0.3 m/s for 1 second and the measure the actual distance traveled. For 3 trials, the results are 28 cm, 29 cm, and 
+	
+
+\end{document}

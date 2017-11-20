@@ -1,0 +1,34 @@
+\documentclass{article}
+
+\author{Victor Yu}
+\title{Digital Signal Processing Notes}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section{Short-time Fourier transform}
+	
+	The short-time Fourier transform (STFT) is a Fourier-related transform used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes over time (Wikipedia). When analyzing a real signal in practice, you have finite collection of M samples of that signal. If you take a discrete Fourier transform (DFT) of the entire signal of length M, you get the frequency contents (magnitude and phase) over the entire duration of that signal. Why would you want to analyze local sections of a signal rather than the entire signal at once? A good example is a song (especially a riff), where notes of different pitches are each played for a short period of time in succession. We may want to analyze the frequency content over one period (or frame) when a single note is played so we can get a clearer picture of the fundamental frequency of that sound plus its higher order harmonics. If we apply the STFT every H number of samples within the M samples of the entire signal, we can plot the frequency content as it changes throughout the M samples as a function of time with a resolution of H samples. This plot is called a spectogram.
+	
+	Note that in the STFT, it is possible (and common) to take a DFT of size $N < M$. Usually, the windo
+	
+	\section{Number of independent frequency samples in even and odd sized DFTs}
+	
+	The conjugate symmetry property (PROVE THIS) of real signals says that
+	\begin{equation}
+	X[N-k] = X[-k] = X^{*}[k]
+	\end{equation}
+	This means that for a DFT of size 8, we have $X[7] = X^{*}[1]$, $X[6] = X^{*}[2]$, and $X[5] = X^{*}[3]$. Thus, only 5 frequency samples are needed to represent the spectrum: $X[0]$, $X[1]$, $X[2]$, $X[3]$, and $X[4]$. The remaining frequency samples $X[5]$, $X[6]$, and $X[7]$ can be calculated by taking the conjugates of $X[3]$, $X[2]$, and $X[1]$, respectively. More generally, for a DFT of size $N$, where $N$ is even, $(N/2) +1$ samples are needed to represent the frequency spectrum.
+	
+	Using the same approach, it can be shown that for a DFT of size $N$, where $N$ is odd, $(N+1)/2$ samples are needed to represent the frequency spectrum.
+	
+	\section{Zero-phase windowing}
+	
+	\section{Open Questions}
+	
+	\begin{itemize}
+		\item Why does zero padding not improve the frequency resolution of the FFT? Instead its like interpolating the frequency spectrum. Zero padding essentially compares or correlates the signal in the time domain to more finely resolved basis functions. If the original signal in the time domain is of length $N$ and it is padded with $M$ zeros, then a frequency bins of a size $N+M$ DFT will be spaced $f_s/(N+M)$ Hz apart.
+		\item Why is the main lobe width (in bins) of any window independent of the number of samples (including zero padded)? This is not true if the window is zero padded. The accurate statement is that if you take the DFT that is the same size as the window in the time domain, then the width of the main lobe (in bins) is constant. For example, if you have a rectangular window of size $21$ and take a size $21$ DFT, then the width of the main lobe is 2 bins. if you have a rectangular window of size $41$ and take a size $41$ DFT, then the width of the main lobe is still 2 bins.
+	\end{itemize}
+\end{document}

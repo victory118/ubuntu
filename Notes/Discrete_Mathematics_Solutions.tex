@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+
+\title{Solutions to Discrete Mathematics: An Open Introduction}
+\author{Victor Yu}
+
+\begin{document}
+	\maketitle
+	
+	\section{First Chapter}
+	
+	\section{Sequences}
+	\subsection{Definitions}
+	\subsection{Arithmetic and Geometric Sequences}
+	\leavevmode \\
+	\textbf{Investigate!}
+	
+	\begin{enumerate}
+	
+	\item $a_n = 1, 5, 9,\ldots \text{ for } n = 0, 1, 2,\ldots\rightarrow a_n = 4n + 1$\\
+
+	\item $a_n = 2, 6, 18,\ldots \text{ for } n = 0, 1, 2,\ldots\rightarrow a_n = 2(3^n)$\\
+	
+	\item $a_n = 1, 3, 6, 10,\ldots \text{ for } n = 1, 2, 3, 4\ldots\rightarrow a_n = n(n+1)/2$\\
+	\end{enumerate}
+	
+	\begin{tcolorbox}
+	\noindent\textbf{Arithmetic Sequences}
+	\\
+	\\
+	If the terms of a sequence differ by a constant, we say the sequence is arithmetic. If the initial term ($a_0$) of the sequence is $a$ and the common difference is $d$, then we have,\\
+	
+	\noindent Recursive definition: $a_n = a_{n-1} + d$ with $a_0 = a$.\\
+	
+	\noindent Closed formula: $a_n = a + dn$
+	
+	\end{tcolorbox}
+	\leavevmode \\
+	
+	\noindent \textbf{Insights:} Because each term in the sequence differs by a constant, we could have guessed the general form of the closed formula by knowing that the derivative of the closed formula must be a constant. If the closed formula is a linear equation of the form $a_n = a + d_n$, then it has a derivative equal to $d$, which is a constant.\\
+	
+	\noindent\textbf{Example 2.2.1.} Find the recursive definitions and closed formulas for the sequences below. Assume the first term listed is $a_0$.
+	
+	\begin{enumerate}
+	
+	\item $a_n = 2, 5, 8, 11, 14, \ldots$
+	
+	Solution: The recursive definition is $a_n = a_{n-1} + 3$ with $a_0 = 2$. The closed formula is $a_n = 2 + 3n$.
+	
+	\item $a_n = 50, 43, 36, 29, \ldots$
+	
+	Solution: The recursive definition is $a_n = a_{n-1} - 7$ with $a_0 = 50$. The closed formula is $a_n = 50 - 7n$.\\
+	\end{enumerate}
+	
+	\begin{tcolorbox}
+		\noindent\textbf{Geometric Sequences}\\
+		
+		A sequence is called \textit{\textbf{geometric}} if the ratio between successive terms is constant. Suppose the initial term $a_0$ is $a$ and the \textit{\textbf{common ratio}} is $r$. Then we have,\\
+	
+		\noindent Recursive definition: $a_n = ra_{n-1}$ with $a_0 = a$.\\
+		
+		\noindent Closed formula: $a_n = a\cdot r^n$
+	\end{tcolorbox}
+	
+	\noindent\textbf{Example 2.2.2.} Find the recursive and closed formula for the sequences below. Again, the first term listed is $a_0$.
+	
+	\begin{enumerate}
+		\item $a_n = 3, 6, 12, 24, 48,\ldots$
+		
+		Solution: This is a geometric sequence where the initial term is $a_0 = 3$ and the common ratio is $r = 2$. Therefore, the recursive formula is $a_n = 2a_{n-1}$ and the closed formula is $a_n = 3\cdot 2^n$.
+		
+		\item $a_n = 27, 9, 3, 1, 1/3,\ldots$
+		
+		Solution: This is a geometric sequence where the initial term is $a_0 = 27$ and the common ratio is $r = 1/3$. Therefore, the recursive formula is $a_n = (1/3)a_{n-1}$ and the closed formula is $a_n = 27(1/3)^n$.\\
+	\end{enumerate}
+	
+	\noindent\textbf{Sums of Arithmetic and Geometric Sequences}\\
+	
+	\noindent\textbf{Investigate!}
+	
+	\begin{enumerate}
+		\item Suppose that the candy machine currently holds exactly 650 Skittles, and every time someone inserts a quarter, exactly 7 Skittles come out of the machine.
+		\begin{enumerate}
+			\item If 20 quarters are inserted, then $20\times7 = 140$ Skittles would have come out of the machine. Hence $650 - 140 = 510$ Skittles will be left in the machine.
+			\item There will never be exactly zero skittles left in the machine because 650 is not a multiple of 7. This statement assumes that exactly 7 Skittles must come out when a quarter is put into the machine. That is, if there are less than 7 Skittles remaining in the machine, then nothing would come out.
+		\end{enumerate}
+		\item $a_n = 7, 10, 13, 16\ldots$ for $n = 1, 2, 3\ldots \rightarrow a_n = 7 + 3(n-1)$. After 20 quarters are put into the machine, the number of skittles given out is $\sum_{n=1}^{20} (7 + 3(n-1))$. The arithmetic sum formula is $S_n = (a_1 + a_n)(n/2)$ and hence $(7 + 64)(20/2) = 710$ Skittles are given out.
+		\item $a_n = 4, 7, 12, 19,\ldots$ for $n = 1, 2, 3,\ldots \rightarrow a_n = n^2 + 3$. After 20 quarters are put into the machine, $\sum_{n=1}^{20} (n^2 + 3)$ Skittles would have come out. The sum of squares series is $S_n = 1, 5, 14, 30,\ldots = \sum_{n=1}^{N} n^2$. To get the sum of squares equation, we note that the difference between successive terms is $d_n = 4, 9, 16, 25\ldots$ and the difference of the difference between successive terms is $dd_n = 5, 7, 9 \ldots$ and the difference of the difference of the difference of successive terms is $ddd_n = 2, 2, 2 \ldots$ which is constant. Since the third derivative of the sum of squares equation is a constant, then the formula must be a cubic equation of the form $S_n = An^3 + Bn^2 + Cn + D$. Substituting values for $S_n$ and solving the system of equations gives $S_n = (2n+1)(n+1)(n/6)$. Finally, we have $\sum_{n=1}^{20} (n^2 + 3) = \sum_{n=1}^{20} n^2 + 3\sum_{n=1}^{20} = (2(20) +1)(20+1)(20/6) + 3(20) = 2930$.
+		
+	\end{enumerate}
+	
+	\begin{itemize}
+		\item [\textbf{Problem 2.6.1.}] This is the solution.
+		
+		\item [\textbf{Problem 2.6.2.}] This is the solution.
+		
+	\end{itemize}
+	
+\end{document}

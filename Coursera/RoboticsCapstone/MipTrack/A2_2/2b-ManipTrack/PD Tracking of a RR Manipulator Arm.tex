@@ -1,0 +1,55 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{PD Tracking of a RR Manipulator Arm}
+\author{Victor Yu}
+
+\begin{document}
+	\maketitle
+	
+	\section{Problem Statement}
+	The goal is to track a desired position for the end-effector of a manipulator arm. The manipulator arm is essentially a double pendulum, where the torque on each joint can be controlled independently to move the end-effector to a desired position.
+	
+	\section{Forward Kinematics}
+	The position of the end-effector can be expressed as a function of the two joint angles as
+	\begin{align}
+	\vec{p} &= \begin{bmatrix}
+	(l_1\cos{\theta_1} + l_2\cos{(\theta_1 + \theta_2)}) \hat{\imath} \\
+	(l_1\sin{\theta_1} + l_2\sin{(\theta_1 + \theta_2)}) \hat{\jmath}
+	\end{bmatrix}
+	\end{align}
+	where $l_1$ and $l_2$ are the lengths and $\theta_1$ and $\theta_2$ are the angles of the first and second linkages, respectively. The first linkage is attached to the ground and its angle is defined with respect to the ground plane. The second linkage is attached to the first linkage and its angle is defined with respect to the orientation of the first linkage. The free end of the second linkage is the position of the end-effector.
+	
+	\section{Controller}
+	The controller has the form
+	
+	\begin{equation}
+	u = -k_pJ^T(p-r(t))-k_d\dot{q},
+	\end{equation}
+	where $q = [\theta_1, \theta_2]^T$ and $r(t)$ is the reference trajectory in cartesian $x$ and $y$ coordinates. $J = D_{\theta}p$ is the manipulator Jacobian, where $D_{\theta}$ is calculated as
+	
+	\begin{equation}
+	D_{\theta} = \frac{\partial \vec{p}}{\partial \theta} = 
+	\begin{bmatrix}
+	\frac{\partial x}{\partial \theta_1} & \frac{\partial x}{\partial \theta_2} \\
+	\frac{\partial y}{\partial \theta_1} & \frac{\partial y}{\partial \theta_2}
+	\end{bmatrix}
+	\end{equation}
+	
+	Each of the partial derivatives are calculated as
+	
+	\begin{equation}
+	\frac{\partial x}{\partial \theta_1} = -l_1\sin{\theta_1}
+	\end{equation}
+	\begin{equation}
+	\frac{\partial x}{\partial \theta_2} = -l_2\sin{(\theta_1 + \theta_2)}
+	\end{equation}
+	\begin{equation}
+	\frac{\partial y}{\partial \theta_1} = l_1\cos{\theta_1}
+	\end{equation}
+	\begin{equation}
+	\frac{\partial y}{\partial \theta_2} = l_2\cos{(\theta_1 + \theta_2)}
+	\end{equation}
+
+\end{document}

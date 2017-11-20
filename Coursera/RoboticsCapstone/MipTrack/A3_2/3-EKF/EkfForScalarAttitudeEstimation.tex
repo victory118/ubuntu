@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\newcommand{\irow}[1]{% inline row vector
+	\begin{smallmatrix}(#1)\end{smallmatrix}%
+}
+
+\title{EKF for Scalar Attitude Estimation}
+\author{Victor Yu}
+
+\begin{document}
+	\maketitle
+	
+	\section{Modeling a 1-DOF Rotating Rigid Body}
+	
+	The governing equations of a 1-DOF rotating rigid body are given by
+	\begin{equation}
+		\ddot{\phi} = 0
+	\end{equation}
+	where $\phi \in S^1$ is the body's "roll angle." The nominal model of this system is unforced. That is, $\ddot{\phi} = a(t)$ where $a(t) = 0$, which means there is no acceleration in the roll direction. However, there could be disturbances and we do not know apriori how they will affect the robot.
+	
+	We define the state vector as $x_k \coloneqq \left[ \begin{smallmatrix} \phi(t_k)&\dot{\phi}(t_k) \end{smallmatrix} \right]^T$. The state update equation in discrete time is calculated as
+	\begin{equation} \label{eq:state_update}
+		x_{k+1} = 
+		\begin{bmatrix}
+		1 & dt\\
+		0 & 1
+		\end{bmatrix}
+		x_k \eqqcolon A_kx_k
+	\end{equation}
+	for a zero-order hold discretization. That is, the state variables are assumed to be constant throughout the sampling interval.
+	
+	\section{Measurements from an IMU}
+	There is a MEMS accelerometer and gyroscope on board the robot that is called an inertial measurement unit (IMU). This sensor provides us with acceleration in the $y$ and $z$ directions in units of $g$'s and the rotation rate in units of deg/s. The measurement vector can be written as
+	\begin{equation} \label{eq:measurement}
+		z_k = 
+		\begin{bmatrix}
+		a_y\\
+		a_z\\
+		\omega
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		\sin(\phi_d(t_k)\pi/180)\\
+		\cos(\phi_d(t_k)\pi/180)\\
+		\dot{\phi}_d(t_k)
+		\end{bmatrix}
+		\eqqcolon h(x_k)
+	\end{equation}
+	where $\phi_d$ is the roll angle in units of degrees and $\dot{\phi}_d$ is the roll angle rate in units of degrees/second. Note that the final argument of the sine and cosine functions need to be converted to units of radians.
+	
+	\section{Extended Kalman Filter}
+	
+	The state update from Eq. \ref{eq:state_update} is linear, but the measurement from Eq. \ref{eq:measurement} is nonlinear. To use the extended Kalman Filter, we first have to linearize the measurement function by calculating the Jacobian as
+	\begin{equation}
+		H_k\coloneqq \left.\frac{\partial{h}}{\partial{x}}\right|_{\hat{x}_{k|k-1}} = 
+		\begin{bmatrix}
+		\frac{\partial{h_1}}{\partial{\phi_d}} & \frac{\partial{h_1}}{\partial{\dot{\phi}_d}}\\
+		\frac{\partial{h_2}}{\partial{\phi_d}} & \frac{\partial{h_2}}{\partial{\dot{\phi}_d}}\\
+		\frac{\partial{h_3}}{\partial{\phi_d}} & \frac{\partial{h_3}}{\partial{\dot{\phi}_d}}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		(\pi/180)\cos(\phi_d(t_k)\pi/180) & 0\\
+		(-\pi/180)\sin(\phi_d(t_k)\pi/180) & 0\\
+		0 & 1
+		\end{bmatrix}
+	\end{equation}
+	Note that the partial derivatives are with respect to the roll angle in units of degrees rather than radians because the measurements are obtained in units of degrees. For consistency, make sure that state predictions, measurements, and final state estimates in the Kalman filter implementation have the appropriate units.
+	
+	\subsection{Prediction Step}
+	
+	The prediction step computes the current state $\hat{x}_{k|k-1}$, as a function of the previous best estimate of the state, $\hat{x}_{k-1}$, by
+	\begin{equation}
+		\hat{x}_{k|k-1} = A_{k-1}\hat{x}_{k-1}
+	\end{equation}
+	The covariance is propagated to the current step from the previous step by
+	\begin{equation}
+		P_{k|k-1} = A_{k-1}P_{k-1}A^T_{k-1} + Q
+	\end{equation}
+	
+	\subsection{Update Step}
+	
+	The optimal Kalman gain is calculated by
+	\begin{equation} \label{eq:kalman_gain}
+		K_k = P_{k|k-1}H^T_k(H_kP_{k|k-1}H^T_k + R)^{-1}
+	\end{equation}
+	
+	The new measurement, $z_k$, is used to refine the estimate of the state and the covariance, respectively by
+	\begin{equation}
+		\hat{x}_k = \hat{x}_{k|k-1} + K_k(z_k-h(\hat{x}_{k|k-1}))
+	\end{equation}
+	\begin{equation}
+		P_k = (I - K_kH_k)P_{k|k-1}
+	\end{equation}
+	
+	\section{Tuning parameters Q and R}
+	The tuning parameters of the Kalman filter are the $Q$ and $R$ matrices, which represent the covariance of the process noise and measurement noise, respectively. If you are more confident in the process model than the measurements, then $Q$ will be smaller relative to $R$. If you are more confident in the measurements than the process model, then $R$ will be smaller relative to $Q$. Notice in the optimal Kalman gain from Eq. \ref{eq:kalman_gain} that when $R$ is small and we take the inverse, then the Kalman gain will be large. This means that the state estimates will follow more closely with the measurements and will usually be slightly noisier. On the other hand, when you trust the process model more, the best estimate of the state is usually lagging behind the true value of the state. 
+\end{document}

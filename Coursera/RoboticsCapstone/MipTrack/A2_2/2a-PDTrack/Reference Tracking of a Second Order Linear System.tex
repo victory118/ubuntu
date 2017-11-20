@@ -1,0 +1,52 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\author{Victor Yu}
+\title{Reference Tracking of a Second Order Linear System}
+
+\begin{document}
+	\maketitle
+	
+	\section{Problem Statement}
+	We have a dynamical system that can be mathematically modeled by the equation
+	
+	\begin{equation}
+	{\ddot{x}(t) = u(t)} \label{double_int_eq}
+	\end{equation}
+	
+	This is a second order linear system commonly known as a double integrator. The goal is to design a control input, $u(t)$, in order for the state, $x(t)$, to track a reference trajectory, $x_{des}(t)$, as closely as possible. Hence, our control objective is to minimize the tracking error, defined as
+	
+	\begin{equation}
+	{e(t) = x_{des}(t) - x(t)}
+	\end{equation}
+	
+	\section{Strategy}
+	
+	The strategy is to design $u(t)$ such that the closed loop dynamics of the system become
+	
+	\begin{equation} \label{error_eq}
+	\ddot{e} + K_v\dot{e} + K_pe = 0
+	\end{equation}
+	Here $K_p$ and $K_v$ are the proportional and derivative gains, respectively. For the error to converge exponentially to zero, both $K_p, K_v > 0$. This will be proved later by coming up with an energy function that captures the evolution of the states that shows the energy of the system converges to zero (PROVE THIS).
+	
+	Substituting the relevant quantities into the Eq. \ref{error_eq}, we have
+	
+	\begin{equation} \label{error_eq_full}
+	(\ddot{x}_{des} - \ddot{x}) + K_v(\dot{x}_{des} - \dot{x}) + K_p(x_{des} - x) = 0
+	\end{equation}
+	Subtracting $\ddot{x}$ from both sides, we can see that the control input should be chosen as
+	
+	\begin{equation}
+	u(t) = \ddot{x}_{des} + K_v(\dot{x}_{des} - \dot{x}) + K_p(x_{des} - x)
+	\end{equation}
+	to give the desired result. That is, Eq. \ref{double_int_eq} becomes Eq. \ref{error_eq}.
+	
+	
+	\section{Implementation}
+	\begin{itemize}
+		\item The input is saturated at $-5 \leq u \leq 5$. That means you cannot have infinite bandwidth by setting $K_p$ as high as possible.
+		\item If there is a lot of overshoot in the step response, increase the derivative gain $K_v$ to decrease overshoot.
+	\end{itemize}
+	
+\end{document}
